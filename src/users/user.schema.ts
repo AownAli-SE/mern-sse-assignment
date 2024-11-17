@@ -53,7 +53,7 @@ const userSchema: Schema<IUser> = new Schema(
          minlength: [6, "Password must be atleast 6 characters"],
          match: [
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_-]).{6,}$/,
-            "Password is not strong enough. (1 Uppercase, 1 Lowercase, 1 Special Character, 1 Numeric Value)",
+            "Password is not strong enough. (1 Uppercase, 1 Lowercase, 1 Special Character (from upper numeric keys), 1 Numeric Value)",
          ],
       },
       isAdmin: { type: Boolean, default: false },
