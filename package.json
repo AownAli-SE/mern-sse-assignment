@@ -28,6 +28,7 @@
    },
    "dependencies": {
       "@apollo/server": "^4.11.2",
+      "@graphql-tools/merge": "^9.0.9",
       "@graphql-tools/schema": "^10.0.8",
       "@types/jsonwebtoken": "^9.0.7",
       "argon2": "^0.41.1",
