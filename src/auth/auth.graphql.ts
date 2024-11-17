@@ -5,13 +5,13 @@ export const typeDefs = `#graphql
    }
    
     type Query {
-      switchRole: Auth!
+      hello: String
     }
    
    type Mutation {
       signup (body: SignupInput): Auth!
       login (body: LoginInput): Auth!
-      
+      switchRole: Auth!
    }
 
    input SignupInput {
