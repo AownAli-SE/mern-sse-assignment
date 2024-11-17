@@ -1,13 +1,11 @@
-import { GraphQLError } from "graphql";
-import { verify } from "argon2";
-
 import { JwtService } from "./jwt.service";
 import User from "../users/user.schema";
 import { SignupDto } from "./dtos/signup.dto";
 import { UserService } from "../users/users.service";
 import { LoginDto } from "./dtos/login.dto";
 import { ApolloServerErrorCode } from "@apollo/server/errors";
-import { JwtPayload } from "jsonwebtoken";
+import { ContextUser } from "../utilities/types/context";
+import { throwGraphQLError, verifyPassword } from "../utilities/helperMethods";
 
 export class AuthService {
    private jwtService = JwtService.getInstance();
@@ -30,33 +28,15 @@ export class AuthService {
 
       // Get user by email
       const user = await this.userService.getUser(email);
-      if (!user)
-         throw new GraphQLError("Email or password incorrect!", {
-            extensions: {
-               code: "BAD_REQUEST",
-               http: {
-                  status: 400,
-               },
-            },
-         });
+      if (!user) {
+         throwGraphQLError("Email or password incorrect!", ApolloServerErrorCode.BAD_USER_INPUT, 400);
+      }
 
       // Verify password
-      const secret = process.env.HASH_SECRET;
-      if (!secret) throw new Error("HASH_SECRET not defined");
-
-      const doesMatch = await verify(user.password, password, {
-         secret: Buffer.from(secret, "utf8"),
-      });
-
-      if (!doesMatch)
-         throw new GraphQLError("Email or password incorrect!", {
-            extensions: {
-               code: ApolloServerErrorCode.BAD_USER_INPUT,
-               http: {
-                  status: 400,
-               },
-            },
-         });
+      const doesMatch = await verifyPassword(user.password, password);
+      if (!doesMatch) {
+         throwGraphQLError("Email or password incorrect!", ApolloServerErrorCode.BAD_USER_INPUT, 400);
+      }
 
       // Generate JWT token
       const token = this.jwtService.getToken(audience, user._id.toString(), email, "buyer");
@@ -67,23 +47,9 @@ export class AuthService {
       };
    }
 
-   switchRole(bearerToken: string, audience: string) {
-      const token = bearerToken?.split(" ")?.at(1);
-      if (!token)
-         throw new GraphQLError("Unauthorized", {
-            extensions: {
-               code: "UNAUTHORIZED",
-               http: {
-                  status: 401,
-               },
-            },
-         });
-
-      const payload = this.jwtService.verifyToken(token, audience) as JwtPayload;
-      const role = payload.role === "buyer" ? "seller" : "buyer";
-
-      const newToken = this.jwtService.getToken(audience, payload.id, payload.email, role);
-
+   switchRole(user: ContextUser, audience: string) {
+      const role = user.role === "buyer" ? "seller" : "buyer";
+      const newToken = this.jwtService.getToken(audience, user.id, user.email, role);
       return { token: newToken, role };
    }
 

@@ -8,6 +8,8 @@ import { expressMiddleware } from "@apollo/server/express4";
 import app from "./app";
 import { connectDB } from "./lib/db.config";
 import { schema } from "./schema";
+import { JwtService } from "./auth/jwt.service";
+import { JwtPayload } from "jsonwebtoken";
 
 // Connecting to database
 connectDB();
@@ -26,7 +28,27 @@ server.start().then(async () => {
    app.use(
       "/graphql",
       expressMiddleware(server, {
-         context: async (ctx) => ctx.req.headers,
+         context: async (ctx) => {
+            // Parsing user info from JWT token
+            const headers = ctx.req.headers;
+            const jwtService = JwtService.getInstance();
+
+            const bearerToken = headers.authorization;
+            if (!bearerToken) {
+               return { user: null, headers };
+            }
+
+            const tokenArray = bearerToken.split(" ");
+            if (tokenArray[0].toLocaleLowerCase() !== "bearer") {
+               return { user: null, headers };
+            }
+
+            const token = tokenArray[1];
+            const payload = jwtService.verifyToken(token, headers.origin) as JwtPayload;
+            const user = payload ? { id: payload.id, email: payload.email, role: payload.role } : null;
+
+            return { user, headers };
+         },
       })
    );
 
