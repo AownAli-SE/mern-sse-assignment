@@ -21,13 +21,16 @@ export class JwtService {
    }
 
    verifyToken(jwtToken: string, audience: string) {
-      const payload = verify(jwtToken, this.secret, {
-         algorithms: [this.algorithm],
-         issuer: this.issuer,
-         audience,
-      });
-
-      return payload;
+      try {
+         const payload = verify(jwtToken, this.secret, {
+            algorithms: [this.algorithm],
+            issuer: this.issuer,
+            audience,
+         });
+         return payload;
+      } catch (err: any) {
+         return null;
+      }
    }
 
    //////////////////////

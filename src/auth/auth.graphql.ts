@@ -4,10 +4,6 @@ export const typeDefs = `#graphql
       role: String!
    }
    
-    type Query {
-      hello: String
-    }
-   
    type Mutation {
       signup (body: SignupInput): Auth!
       login (body: LoginInput): Auth!
