@@ -9,4 +9,5 @@ export type ContextUser = {
    id: string;
    email: string;
    role: string;
+   isAdmin: boolean;
 };

@@ -16,7 +16,7 @@ export class AuthService {
       const user = await User.create(signupDto.body);
 
       // Creating JWT token
-      const token = this.jwtService.getToken(audience, user._id.toString(), user.email, "buyer");
+      const token = this.jwtService.getToken(audience, user._id.toString(), user.email, user.isAdmin, "buyer");
       return {
          token,
          role: "buyer",
@@ -39,7 +39,7 @@ export class AuthService {
       }
 
       // Generate JWT token
-      const token = this.jwtService.getToken(audience, user._id.toString(), email, "buyer");
+      const token = this.jwtService.getToken(audience, user._id.toString(), email, user.isAdmin, "buyer");
 
       return {
          token,
@@ -49,7 +49,7 @@ export class AuthService {
 
    switchRole(user: ContextUser, audience: string) {
       const role = user.role === "buyer" ? "seller" : "buyer";
-      const newToken = this.jwtService.getToken(audience, user.id, user.email, role);
+      const newToken = this.jwtService.getToken(audience, user.id, user.email, user.isAdmin, role);
       return { token: newToken, role };
    }
 

@@ -45,7 +45,9 @@ server.start().then(async () => {
 
             const token = tokenArray[1];
             const payload = jwtService.verifyToken(token, headers.origin) as JwtPayload;
-            const user = payload ? { id: payload.id, email: payload.email, role: payload.role } : null;
+            const user = payload
+               ? { id: payload.id, email: payload.email, role: payload.role, isAdmin: payload.isAdmin }
+               : null;
 
             return { user, headers };
          },

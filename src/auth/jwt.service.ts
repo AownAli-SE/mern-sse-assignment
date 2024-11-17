@@ -7,8 +7,8 @@ export class JwtService {
    private expiresIn = process.env.JWT_EXPIRATION as string;
    private algorithm: Algorithm = "HS384";
 
-   getToken(audience: string, userId: string, email: string, role: Role = "buyer") {
-      const payload = { id: userId, email, role };
+   getToken(audience: string, userId: string, email: string, isAdmin: boolean = false, role: Role = "buyer") {
+      const payload = { id: userId, email, role, isAdmin };
 
       const token = sign(payload, this.secret, {
          audience,
