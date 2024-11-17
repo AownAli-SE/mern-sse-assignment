@@ -9,9 +9,11 @@ import { typeDefs as listingTypeDefs } from "./listings/listing.graphql";
 import { resolver as listingResolver } from "./listings/listing.resolver";
 import { typeDefs as bookingTypeDefs } from "./bookings/booking.graphql";
 import { resolver as bookingResolver } from "./bookings/booking.resolver";
+import { typeDefs as adminTypeDefs } from "./admin/admin.graphql";
+import { resolver as adminResolver } from "./admin/admin.resolver";
 
 // Merge type definitions
-const typeDefs = mergeTypeDefs([authTypeDefs, userTypeDefs, listingTypeDefs, bookingTypeDefs]);
+const typeDefs = mergeTypeDefs([authTypeDefs, userTypeDefs, listingTypeDefs, bookingTypeDefs, adminTypeDefs]);
 
 // Auth schema
 const authSchema = makeExecutableSchema({
@@ -37,7 +39,13 @@ const bookingSchema = makeExecutableSchema({
    resolvers: bookingResolver,
 });
 
+// Admin schema
+const adminSchema = makeExecutableSchema({
+   typeDefs: typeDefs,
+   resolvers: adminResolver,
+});
+
 // Root schema
 export const schema = mergeSchemas({
-   schemas: [authSchema, userSchema, listingSchema, bookingSchema],
+   schemas: [authSchema, userSchema, listingSchema, bookingSchema, adminSchema],
 });
