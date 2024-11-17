@@ -96,14 +96,14 @@ export const resolver = {
          return bookingService.cancelOrder(args.orderId, ctx.user.id);
       },
 
-      rateOrder: (_: undefined, args: { orderId: string; rating: number }, ctx: ContextType) => {
+      rateOrder: (_: undefined, args: { orderId: string; rating: number; comments: string }, ctx: ContextType) => {
          if (!ctx.user) {
             throwGraphQLError("Unauthorized", "UNAUTHORIZED", 401);
          } else if (ctx.user.role !== "buyer") {
             throwGraphQLError("Request denied", "FORBIDDEN", 403);
          }
 
-         return bookingService.rateOrder(args.orderId, args.rating, ctx.user.id);
+         return bookingService.rateOrder(args.orderId, args.rating, args.comments, ctx.user.id);
       },
    },
 };

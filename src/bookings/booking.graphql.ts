@@ -5,6 +5,7 @@ export const typeDefs = `#graphql
         seller: User!
         buyer: User!
         rating: Int
+        comments: String
         isCompleted: Boolean!
         status: String!
     }

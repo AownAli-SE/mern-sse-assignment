@@ -71,7 +71,7 @@ export class BookingService {
       return { message: "Order marked cancelled." };
    }
 
-   async rateOrder(orderId: string, rating: number, buyerId: string) {
+   async rateOrder(orderId: string, rating: number, comments: string, buyerId: string) {
       const order = await Booking.findById(orderId);
       if (!order) {
          throwGraphQLError(`Order with ID ${orderId} doesn't exist`, "BAD_REQUEST", 400);
@@ -82,6 +82,7 @@ export class BookingService {
       }
 
       order.rating = rating;
+      order.comments = comments;
       await order.save();
 
       return { message: "Order was rated" };

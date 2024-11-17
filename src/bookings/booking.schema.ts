@@ -6,6 +6,7 @@ interface IBooking extends Document {
    buyer: Schema.Types.ObjectId;
    isCompleted: boolean;
    rating: number;
+   comments: string;
    status: "In progress" | "Completed" | "Cancelled";
 }
 
@@ -34,6 +35,10 @@ const schema = new Schema<IBooking>({
       default: null,
       min: 0,
       max: 5,
+   },
+   comments: {
+      type: String,
+      maxlength: 600,
    },
    status: {
       type: String,
