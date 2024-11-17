@@ -1,4 +1,5 @@
 import { makeExecutableSchema, mergeSchemas } from "@graphql-tools/schema";
+import { mergeTypeDefs } from "@graphql-tools/merge";
 
 import { typeDefs as authTypeDefs } from "./auth/auth.graphql";
 import { resolver as authResolver } from "./auth/auth.resolver";
@@ -6,10 +7,11 @@ import { typeDefs as userTypeDefs } from "./users/user.graphql";
 import { resolver as userResolver } from "./users/users.resolver";
 import { typeDefs as listingTypeDefs } from "./listings/listing.graphql";
 import { resolver as listingResolver } from "./listings/listing.resolver";
-import { mergeTypeDefs } from "@graphql-tools/merge";
+import { typeDefs as bookingTypeDefs } from "./bookings/booking.graphql";
+import { resolver as bookingResolver } from "./bookings/booking.resolver";
 
 // Merge type definitions
-const typeDefs = mergeTypeDefs([authTypeDefs, userTypeDefs, listingTypeDefs]);
+const typeDefs = mergeTypeDefs([authTypeDefs, userTypeDefs, listingTypeDefs, bookingTypeDefs]);
 
 // Auth schema
 const authSchema = makeExecutableSchema({
@@ -29,7 +31,13 @@ const listingSchema = makeExecutableSchema({
    resolvers: listingResolver,
 });
 
+// Booking schema
+const bookingSchema = makeExecutableSchema({
+   typeDefs: typeDefs,
+   resolvers: bookingResolver,
+});
+
 // Root schema
 export const schema = mergeSchemas({
-   schemas: [authSchema, userSchema, listingSchema],
+   schemas: [authSchema, userSchema, listingSchema, bookingSchema],
 });
