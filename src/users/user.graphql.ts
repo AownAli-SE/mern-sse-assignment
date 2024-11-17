@@ -5,8 +5,8 @@ export const typeDefs = `#graphql
         lastname: String!
         username: String!
         email: String!
-        created_at: String!
-        updated_at: String!
+        createdAt: String!
+        updatedAt: String!
     }
 
     type Message {

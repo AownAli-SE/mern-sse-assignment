@@ -1,13 +1,15 @@
-import { GraphQLError } from "graphql";
 import { UpdateUserDto } from "./dtos/updateUser.dto";
 import User from "./user.schema";
 import { ApolloServerErrorCode } from "@apollo/server/errors";
-import { hash, verify } from "argon2";
 import { hashPassword, throwGraphQLError, verifyPassword } from "../utilities/helperMethods";
 
 export class UserService {
-   getUser(email: string) {
-      return User.findOne({ email });
+   async getUser(email: string) {
+      return await User.findOne({ email });
+   }
+
+   async getUserById(id: string) {
+      return await User.findById(id);
    }
 
    async getUserProfile(email: string) {
