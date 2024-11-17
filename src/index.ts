@@ -16,16 +16,22 @@ connectDB();
 const httpServer = http.createServer(app);
 const server = new ApolloServer({
    schema: schema,
+   includeStacktraceInErrorResponses: false,
    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
 // Starting up Apollo servers
 server.start().then(async () => {
    // Binding express middlewares to Apollo Server
-   app.use("/graphql", expressMiddleware(server));
+   app.use(
+      "/graphql",
+      expressMiddleware(server, {
+         context: async (ctx) => ctx.req.headers,
+      })
+   );
 
    // Starting up HTTP Server
    const port = process.env.PORT ? parseInt(process.env.PORT) : 8000;
    await new Promise((resolve: any) => httpServer.listen({ port }, resolve));
-   console.log(`🚀 Server ready at http://localhost:4000`);
+   console.log(`🚀 Server ready`);
 });

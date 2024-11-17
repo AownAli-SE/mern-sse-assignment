@@ -1,16 +1,17 @@
 export const typeDefs = `#graphql
-    type Query {
-        auth: String
-    }
-
    type Auth {
       token: String!
       role: String!
    }
    
+    type Query {
+      hello: String
+    }
+   
    type Mutation {
       signup (body: SignupInput): Auth!
       login (body: LoginInput): Auth!
+      switchRole: Auth!
    }
 
    input SignupInput {
